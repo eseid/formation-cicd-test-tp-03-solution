@@ -54,19 +54,26 @@ jobs:
           tail -n 200 app.log || true
           exit 1
 
+      - name: Prepare API test reports directory
+        run: mkdir -p api-test-reports
+
       - name: Run API tests (Hurl via Docker)
         run: |
           docker run --rm \
             --add-host=host.docker.internal:host-gateway \
             -v ${{ github.workspace }}:/work \
             ghcr.io/orange-opensource/hurl:latest \
-            --test /work/src/test/java/api/health.hurl
+            --test \
+            --report-junit /work/api-test-reports/health-report.xml \
+            /work/src/test/java/api/health.hurl
 
           docker run --rm \
             --add-host=host.docker.internal:host-gateway \
             -v ${{ github.workspace }}:/work \
             ghcr.io/orange-opensource/hurl:latest \
-            --test /work/src/test/java/api/orders.hurl
+            --test \
+            --report-junit /work/api-test-reports/orders-report.xml \
+            /work/src/test/java/api/orders.hurl
 
       - name: Stop app
         if: always()
