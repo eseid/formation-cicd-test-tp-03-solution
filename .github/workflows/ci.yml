@@ -64,23 +64,19 @@ jobs:
             -v ${{ github.workspace }}:/work \
             ghcr.io/orange-opensource/hurl:latest \
             --test \
-            --report-junit /work/api-test-reports/health-report.xml \
-            /work/src/test/java/api/health.hurl
-
-          docker run --rm \
-            --add-host=host.docker.internal:host-gateway \
-            -v ${{ github.workspace }}:/work \
-            ghcr.io/orange-opensource/hurl:latest \
-            --test \
-            --report-junit /work/api-test-reports/orders-report.xml \
-            /work/src/test/java/api/orders.hurl
+            --report-junit /work/api-test-reports/junit.xml \
+            --report-html /work/api-test-reports/report.html \
+            --report-json /work/api-test-reports/report.json \
+            /work/formation-cicd-test-tp-03/src/test/java/api
 
       - name: Upload API test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: api-test-reports
-          path: api-test-reports
+          path: |
+            api-test-reports
+            app.log
 
       - name: Stop app
         if: always()

@@ -23,14 +23,23 @@ public final class MiniApiServer {
             sendJson(exchange, 200, "{\"status\":\"UP\"}");
         });
 
-        // GET /api/orders -> []
+        // GET /api/orders -> list of demo orders
         server.createContext("/api/orders", exchange -> {
             if (!"GET".equalsIgnoreCase(exchange.getRequestMethod())) {
                 sendJson(exchange, 405, "{\"error\":\"Method Not Allowed\"}");
                 return;
             }
-            sendJson(exchange, 200, "[]");
+
+            String ordersJson = """
+        [
+          { "id": 1, "product": "Laptop", "price": 1200.0 },
+          { "id": 2, "product": "Mouse",  "price": 25.0 }
+        ]
+        """;
+
+            sendJson(exchange, 200, ordersJson);
         });
+
 
         // Petite page HTML racine (utile pour ZAP, et pour montrer qu'on a aussi du "web")
         server.createContext("/", exchange -> {
