@@ -37,7 +37,7 @@ jobs:
           fi
 
           echo "Starting: $JAR"
-          nohup java -jar target/formation-cicd-test-tp-03-solution-1.0-SNAPSHOT.jar > ../app.log 2>&1 &
+          nohup java -jar "$JAR" > ../app.log 2>&1 &
           echo $! > ../app.pid
 
       - name: Wait for API to be ready
@@ -63,11 +63,7 @@ jobs:
             --add-host=host.docker.internal:host-gateway \
             -v ${{ github.workspace }}:/work \
             ghcr.io/orange-opensource/hurl:latest \
-            --test \
-            --report-junit /work/api-test-reports/junit.xml \
-            --report-html /work/api-test-reports/report.html \
-            --report-json /work/api-test-reports/report.json \
-            /work/src/test/java/api
+            --test /work/src/test/java/api
 
       - name: Upload API test reports
         if: always()
