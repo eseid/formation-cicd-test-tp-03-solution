@@ -37,7 +37,7 @@ jobs:
           fi
 
           echo "Starting: $JAR"
-          nohup java -jar "$JAR" > ../app.log 2>&1 &
+          nohup java -jar target/formation-cicd-test-tp-03-solution-1.0-SNAPSHOT.jar > ../app.log 2>&1 &
           echo $! > ../app.pid
 
       - name: Wait for API to be ready
@@ -74,9 +74,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: api-test-reports
-          path: |
-            api-test-reports
-            app.log
+          path: api-test-reports
 
       - name: Stop app
         if: always()
