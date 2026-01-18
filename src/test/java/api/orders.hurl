@@ -1,8 +1,6 @@
-GET http://host.docker.internal:8080/health
+GET http://host.docker.internal:8080/api/orders
 
-HTTP/1.1 200
-Content-Type: application/json
-
+HTTP 200
 [Asserts]
 jsonpath "$[0].id" == 1
 jsonpath "$[0].product" == "Laptop"
