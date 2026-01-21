@@ -100,11 +100,9 @@ jobs:
           cache: 'maven'
 
       - name: Build app
-        working-directory: formation-cicd-test-tp-03
         run: mvn -q clean package
 
       - name: Start app (background)
-        working-directory: formation-cicd-test-tp-03
         run: |
           JAR=$(ls -1 target/*.jar 2>/dev/null | grep -v 'original-' | head -n 1)
           if [ -z "$JAR" ]; then
