@@ -198,6 +198,7 @@ jobs:
           scp -i ~/.ssh/id_ed25519 \
             "${{ steps.jar.outputs.jar_path }}" \
             "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/opt/miniapiserver/app.jar"
+          
 
       - name: Restart app on EC2
         run: |
