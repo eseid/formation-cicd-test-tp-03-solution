@@ -131,7 +131,7 @@ jobs:
         with:
           target: 'http://localhost:8080'
           fail_action: false
-          issue_title: ''
+          issue_title: 'ZAP Baseline Scan Report'
 
       - name: Upload ZAP reports
         if: always()
