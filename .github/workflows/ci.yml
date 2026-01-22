@@ -157,7 +157,6 @@ jobs:
   deploy-ec2:
     name: Deploy to EC2 (demo CD)
     runs-on: ubuntu-latest
-    needs: security-scan
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
@@ -189,16 +188,15 @@ jobs:
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.EC2_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/ec2_key.pem
+          chmod 600 ~/.ssh/ec2_key.pem
           ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Upload jar to EC2
         run: |
-          scp -i ~/.ssh/id_ed25519 \
+          scp -i ~/.ssh/ec2_key.pem \
             "${{ steps.jar.outputs.jar_path }}" \
             "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/opt/miniapiserver/app.jar"
-          
 
       - name: Restart app on EC2
         run: |
