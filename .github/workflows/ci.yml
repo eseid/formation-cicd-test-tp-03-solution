@@ -190,26 +190,26 @@ jobs:
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ vars.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keyscan -H "${{ vars.EC2_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Upload jar to EC2
         run: |
           scp -i ~/.ssh/id_ed25519 \
             "${{ steps.jar.outputs.jar_path }}" \
-            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/opt/miniapiserver/app.jar"
+            "${{ vars.EC2_USER }}@${{ vars.EC2_HOST }}:/opt/miniapiserver/app.jar"
 
       - name: Restart app on EC2
         run: |
           ssh -i ~/.ssh/id_ed25519 \
-            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" \
+            "${{ vars.EC2_USER }}@${{ vars.EC2_HOST }}" \
             "bash /opt/miniapiserver/start.sh"
 
       - name: Smoke test (health from EC2)
         run: |
           for i in {1..30}; do
-            if curl -sSf "http://${{ secrets.EC2_HOST }}:8080/health" > /dev/null; then
+            if curl -sSf "http://${{ vars.EC2_HOST }}:8080/health" > /dev/null; then
               echo "✅ Deployed app is up!"
               exit 0
             fi
